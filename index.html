@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111b">
+<title>Futbol Anketi | Katılım</title>
+<style>
+:root{--bg:#07111b;--panel:#0b1722;--line:#26394b;--muted:#9aadc0;--green:#28e5a0;--gold:#f5c451;--white:#f4f7fb}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 50% 0%,#19334a,transparent 48%),linear-gradient(160deg,#07111b,#0b1b20 70%,#07130f)}
+.wrap{max-width:1000px;margin:auto;padding:25px 16px}.hero{display:flex;align-items:center;gap:14px;margin:10px 0 24px}.ball{font-size:38px;width:62px;height:62px;display:grid;place-items:center;border:1px solid #516579;border-radius:50%;background:#0c1925}.kicker{font-size:11px;letter-spacing:3px;color:var(--green);font-weight:800}.hero h1{font-size:clamp(27px,5vw,42px);font-style:italic;margin:2px 0}.hero h1 span{color:var(--green)}.hero p{color:#aebed0;margin:0;font-size:14px}.notice{padding:12px 14px;background:#102233;border:1px solid #29465b;border-radius:12px;color:#c9d7e5;font-size:13px;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel,.formpanel,.stats{background:#09141ef2;border:1px solid #2b4052;border-radius:16px;overflow:hidden}.head{display:flex;justify-content:space-between;align-items:center;padding:17px 18px;border-bottom:1px solid #223443}.head h2{margin:0;font-size:17px}.head p{margin:3px 0 0;font-size:12px;color:var(--muted)}.count{font-size:23px;font-weight:850;border:1px solid var(--line);border-radius:10px;padding:5px 12px}.future .count{color:var(--gold)}.rows{padding:13px 15px;min-height:100px}.person{display:flex;align-items:center;gap:10px;background:#0d1a26;border:1px solid #203243;border-radius:10px;padding:11px 12px;margin-bottom:8px;overflow-wrap:anywhere}.dot{width:9px;height:9px;flex-shrink:0;border-radius:50%;background:var(--green)}.future .dot{background:var(--gold)}.empty{text-align:center;padding:24px 6px;color:#8296a9;font-size:13px}
+.formpanel{margin-top:16px;padding:18px}.formpanel h2{margin:0 0 5px;font-size:18px}.desc{font-size:13px;color:var(--muted);margin:0 0 16px}.fields{display:grid;grid-template-columns:1fr 180px;gap:10px}label{display:block;color:#a8b9ca;font-size:11px;letter-spacing:.5px;margin:0 0 6px 3px}input,select{width:100%;padding:13px 12px;border-radius:11px;border:1px solid var(--line);background:#0c1925;color:var(--white);font:inherit;outline:none}input:focus,select:focus{border-color:var(--green)}button{font:inherit;cursor:pointer;border:0;border-radius:11px;padding:13px 16px;font-weight:750}.submit{width:100%;margin-top:12px;background:linear-gradient(135deg,#0ca66d,#08764f);color:white}.submit:disabled{opacity:.55;cursor:wait}.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;padding:17px 5px}.stat{text-align:center;border-right:1px solid #253747}.stat:last-child{border:0}.stat span{font-size:10px;color:#a9bacb;letter-spacing:.5px}.stat strong{display:block;font-size:28px;margin-top:3px}.stat:nth-child(1) strong{color:var(--green)}.stat:nth-child(3) strong{color:var(--gold)}footer{text-align:center;color:#8498ad;font-size:12px;margin:20px 0 5px}.error{display:none;background:#351a21;color:#ffc0c8;border:1px solid #6b3440;border-radius:10px;padding:12px;margin-top:12px;font-size:13px}.success{display:none;background:#103126;color:#b8f9dc;border:1px solid #24684e;border-radius:10px;padding:12px;margin-top:12px;font-size:13px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.wrap{padding:17px 12px}.fields{grid-template-columns:1fr}.ball{width:50px;height:50px;font-size:29px}.hero{gap:10px}.hero p{font-size:12px}.head{padding:15px}.rows{padding:12px}.stat span{font-size:9px}.stat strong{font-size:24px}}
+</style>
+</head>
+<body><div class="wrap">
+<header class="hero"><div class="ball">⚽</div><div><div class="kicker">KADRO & KATILIM</div><h1>FUTBOL <span>ANKETİ</span></h1><p>Adını yaz, katılımını bildir. Kadro birlikte şekillensin!</p></div></header>
+<div class="notice">📢 Katılacak herkes kendi adını bir kez eklesin. Liste tüm ziyaretçilerde ortak olarak güncellenir.</div>
+<main class="layout">
+<section class="panel"><div class="head"><div><h2>🟢 MEVCUT KİŞİLER</h2><p>Katılacağını kesinleştirenler</p></div><div class="count" id="currentCount">—</div></div><div class="rows" id="currentList"><div class="empty">Katılımcılar yükleniyor…</div></div></section>
+<section class="panel future"><div class="head"><div><h2>⭐ GELECEK KİŞİLER</h2><p>Geleceğini bildirenler</p></div><div class="count" id="futureCount">—</div></div><div class="rows" id="futureList"><div class="empty">Katılımcılar yükleniyor…</div></div></section>
+</main>
+<section class="formpanel"><h2>Katılımını bildir</h2><p class="desc">Adını gir ve hangi listeye ekleneceğini seç.</p>
+<form id="joinForm"><div class="fields"><div><label for="name">ADIN</label><input id="name" maxlength="50" autocomplete="name" placeholder="Örn. Ahmet" required></div><div><label for="status">KATILIM DURUMUN</label><select id="status"><option value="current">Mevcut — geliyorum</option><option value="future">Gelecek — sonra katılacağım</option></select></div></div><button class="submit" id="submitBtn" type="submit">✓ Katılımımı Kaydet</button></form>
+<div class="error" id="errorBox"></div><div class="success" id="successBox"></div>
+</section>
+<section class="stats"><div class="stat"><span>MEVCUT TOPLAM</span><strong id="currentTotal">—</strong></div><div class="stat"><span>GENEL TOPLAM</span><strong id="allTotal">—</strong></div><div class="stat"><span>GELECEK TOPLAM</span><strong id="futureTotal">—</strong></div></section>
+<footer>⚽ Futbol bir araya getirir · Katılım listesi canlı güncellenir</footer>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/*
+  KURULUM: Firebase Console'da proje oluşturup Web App config değerlerini
+  aşağıdaki firebaseConfig alanına ekleyin. Ayrıntılar README.md dosyasında.
+*/
+const firebaseConfig = {
+  apiKey: "BURAYA_API_KEY",
+  authDomain: "BURAYA_PROJECT_ID.firebaseapp.com",
+  projectId: "BURAYA_PROJECT_ID",
+  storageBucket: "BURAYA_PROJECT_ID.appspot.com",
+  messagingSenderId: "BURAYA_SENDER_ID",
+  appId: "BURAYA_APP_ID"
+};
+const $=id=>document.getElementById(id);
+const err=$('errorBox'),ok=$('successBox'),btn=$('submitBtn');
+function showError(msg){err.textContent=msg;err.style.display='block';ok.style.display='none'}
+function showSuccess(msg){ok.textContent=msg;ok.style.display='block';err.style.display='none'}
+const configured=!Object.values(firebaseConfig).some(v=>String(v).startsWith('BURAYA_'));
+if(!configured){
+  showError('Site henüz veritabanına bağlanmadı. README.md dosyasındaki Firebase kurulumunu tamamlayıp firebaseConfig alanlarını doldurun.');
+  $('currentList').innerHTML='<div class="empty">Kurulum tamamlanınca ortak liste burada görünecek.</div>';
+  $('futureList').innerHTML='<div class="empty">Kurulum tamamlanınca ortak liste burada görünecek.</div>';
+  $('joinForm').addEventListener('submit',e=>{e.preventDefault();showError('Önce Firebase bağlantısı kurulmalı. README.md dosyasındaki adımları izleyin.')});
+}else{
+  try{
+    const app=initializeApp(firebaseConfig),db=getFirestore(app);
+    const people=collection(db,'participants');
+    onSnapshot(query(people,orderBy('createdAt','asc')),(snap)=>{
+      const all=snap.docs.map(d=>({id:d.id,...d.data()}));
+      const current=all.filter(p=>p.status==='current'),future=all.filter(p=>p.status==='future');
+      function paint(target,items,kind){
+        const el=$(target);
+        if(!items.length){el.innerHTML='<div class="empty">Henüz katılımcı yok. İlk sen katıl!</div>';return}
+        el.innerHTML=items.map(p=>`<div class="person"><span class="dot"></span><span>${escapeHtml(p.name)}</span></div>`).join('');
+      }
+      paint('currentList',current,'current');paint('futureList',future,'future');
+      $('currentCount').textContent=current.length;$('futureCount').textContent=future.length;
+      $('currentTotal').textContent=current.length;$('futureTotal').textContent=future.length;$('allTotal').textContent=all.length;
+    },e=>showError('Liste yüklenemedi. Firebase Firestore kurallarını ve proje ayarlarını kontrol edin. ('+e.code+')'));
+    $('joinForm').addEventListener('submit',async e=>{
+      e.preventDefault();const name=$('name').value.trim(),status=$('status').value;
+      if(!name)return;btn.disabled=true;btn.textContent='Kaydediliyor…';
+      try{
+        // Same-name check is advisory only; Firestore rules should be paired with
+        // Firebase App Check/auth for strong abuse protection in a public deployment.
+        await addDoc(people,{name,status,createdAt:serverTimestamp()});
+        $('name').value='';showSuccess('Katılımın kaydedildi. Teşekkürler!'); 
+      }catch(error){showError('Kayıt yapılamadı. Firebase ayarlarını ve Firestore kurallarını kontrol edin. ('+error.code+')')}
+      finally{btn.disabled=false;btn.textContent='✓ Katılımımı Kaydet'}
+    });
+  }catch(e){showError('Firebase başlatılamadı. firebaseConfig bilgilerini kontrol edin.')}
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+</script>
+</body></html>
